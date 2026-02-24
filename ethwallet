@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ETH Cüzdan Oluşturucu</title>
+    <script src="https://cdn.jsdelivr.net/npm/ethers@6/dist/ethers.umd.min.js"></script>
+    <style>
+        body {
+            font-family: Arial;
+            background: #111;
+            color: white;
+            text-align: center;
+            padding: 40px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background: #4CAF50;
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .card {
+            margin-top: 20px;
+            padding: 20px;
+            background: #222;
+            border-radius: 10px;
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Ethereum Cüzdan Oluşturucu</h1>
+    <button onclick="createWallet()">Yeni Cüzdan Oluştur</button>
+
+    <div class="card" id="result" style="display:none;">
+        <p><strong>Adres:</strong> <span id="address"></span></p>
+        <p><strong>Private Key:</strong> <span id="privateKey"></span></p>
+        <p><strong>Mnemonic:</strong> <span id="mnemonic"></span></p>
+    </div>
+
+    <script>
+        function createWallet() {
+            const wallet = ethers.Wallet.createRandom();
+
+            document.getElementById("address").innerText = wallet.address;
+            document.getElementById("privateKey").innerText = wallet.privateKey;
+            document.getElementById("mnemonic").innerText = wallet.mnemonic.phrase;
+
+            document.getElementById("result").style.display = "block";
+        }
+    </script>
+
+</body>
+</html>
