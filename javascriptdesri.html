@@ -1,4 +1,4 @@
-<!doctype HTML>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -8,6 +8,12 @@
     <h1>Ben YigitCahit</h1>
     <p>Bu benim ders dosyam</p>
     <p id='txtClick'>Merhaba</p>
-    <input type="button" value="Merhaba, Bana Tıkla" onclick="document.getElementById('txtClick').innerHTML='Ananı arıyom';" id="btnlick">
+    <input type="button" value="Merhaba, Bana Tıkla" onclick="merhaba(1)" id="btnlick">
+    <script>
+        function merhaba(txt){
+            const now = Date.now();
+            document.getElementById(txt).innerHTML=now;
+        }
+    </script>
 </body>
 </html>
