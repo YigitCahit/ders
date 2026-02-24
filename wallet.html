@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ETH Cüzdana Giriş</title>
+
+<script src="https://cdn.jsdelivr.net/npm/ethers@6/dist/ethers.umd.min.js"></script>
+
+<style>
+body{
+    font-family: Arial;
+    background:#111;
+    color:white;
+    text-align:center;
+    padding:40px;
+}
+input{
+    width:80%;
+    padding:10px;
+    margin:10px 0;
+    border-radius:6px;
+    border:none;
+}
+button{
+    padding:10px 20px;
+    font-size:16px;
+    background:#4CAF50;
+    border:none;
+    color:white;
+    border-radius:6px;
+    cursor:pointer;
+}
+.card{
+    margin-top:20px;
+    background:#222;
+    padding:20px;
+    border-radius:10px;
+    word-break: break-all;
+}
+</style>
+
+</head>
+<body>
+
+<h2>Ethereum Cüzdana Giriş</h2>
+
+<input type="text" id="inputKey" placeholder="Private Key veya 12 Kelimelik Mnemonic Gir">
+<br>
+<button onclick="loginWallet()">Giriş Yap</button>
+
+<div class="card" id="result" style="display:none;">
+    <h3>Giriş Başarılı ✅</h3>
+    <p><strong>Adres:</strong></p>
+    <p id="address"></p>
+</div>
+
+<div id="error" style="color:red; margin-top:15px;"></div>
+
+<script>
+
+function loginWallet(){
+
+    const input = document.getElementById("inputKey").value.trim();
+    const errorDiv = document.getElementById("error");
+    errorDiv.innerText = "";
+
+    try {
+
+        let wallet;
+
+        // Eğer 12+ kelime varsa mnemonic kabul et
+        if(input.split(" ").length >= 12){
+            wallet = ethers.Wallet.fromPhrase(input);
+        } 
+        // Yoksa private key kabul et
+        else{
+            wallet = new ethers.Wallet(input);
+        }
+
+        document.getElementById("address").innerText = wallet.address;
+        document.getElementById("result").style.display = "block";
+
+    } catch(err){
+        errorDiv.innerText = "Geçersiz Private Key veya Mnemonic!";
+    }
+}
+
+</script>
+
+</body>
+</html>
