@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ETH Gönder & Al</title>
+
+<script src="https://cdn.jsdelivr.net/npm/ethers@6/dist/ethers.umd.min.js"></script>
+
+<style>
+body{
+    font-family: Arial;
+    background:#111;
+    color:white;
+    text-align:center;
+    padding:40px;
+}
+input{
+    width:80%;
+    padding:10px;
+    margin:8px 0;
+    border-radius:6px;
+    border:none;
+}
+button{
+    padding:10px 20px;
+    font-size:15px;
+    background:#4CAF50;
+    border:none;
+    color:white;
+    border-radius:6px;
+    cursor:pointer;
+}
+.card{
+    margin-top:20px;
+    background:#222;
+    padding:20px;
+    border-radius:10px;
+    word-break: break-all;
+}
+</style>
+</head>
+<body>
+
+<h2>Ethereum Wallet</h2>
+
+<h3>🔑 Private Key ile Bağlan</h3>
+<input type="text" id="privateKey" placeholder="Private Key gir">
+<br>
+<button onclick="connectWallet()">Bağlan</button>
+
+<div class="card" id="walletInfo" style="display:none;">
+    <p><strong>Adres:</strong></p>
+    <p id="address"></p>
+    <p><strong>Bakiye:</strong></p>
+    <p id="balance"></p>
+</div>
+
+<hr style="margin:40px 0;">
+
+<h3>💸 ETH Gönder</h3>
+<input type="text" id="toAddress" placeholder="Alıcı adres">
+<input type="text" id="amount" placeholder="Gönderilecek ETH miktarı">
+<br>
+<button onclick="sendETH()">Gönder</button>
+
+<div id="status" style="margin-top:20px;"></div>
+
+<script>
+
+let wallet;
+let provider;
+
+// PUBLIC RPC (Test için)
+provider = new ethers.JsonRpcProvider("https://rpc.ankr.com/eth_sepolia"); 
+// Mainnet için farklı RPC gerekir
+
+async function connectWallet(){
+    try{
+        const key = document.getElementById("privateKey").value.trim();
+        wallet = new ethers.Wallet(key, provider);
+
+        document.getElementById("address").innerText = wallet.address;
+
+        const balanceWei = await provider.getBalance(wallet.address);
+        const balanceEth = ethers.formatEther(balanceWei);
+
+        document.getElementById("balance").innerText = balanceEth + " ETH";
+
+        document.getElementById("walletInfo").style.display = "block";
+    }
+    catch(e){
+        alert("Geçersiz Private Key!");
+    }
+}
+
+async function sendETH(){
+    try{
+        const to = document.getElementById("toAddress").value.trim();
+        const amount = document.getElementById("amount").value.trim();
+
+        const tx = await wallet.sendTransaction({
+            to: to,
+            value: ethers.parseEther(amount)
+        });
+
+        document.getElementById("status").innerHTML =
+            "İşlem gönderildi ✅<br>Tx Hash:<br>" + tx.hash;
+
+        await tx.wait();
+
+        document.getElementById("status").innerHTML += "<br>Onaylandı 🎉";
+    }
+    catch(err){
+        document.getElementById("status").innerText = "Hata oluştu!";
+    }
+}
+
+</script>
+
+</body>
+</html>
